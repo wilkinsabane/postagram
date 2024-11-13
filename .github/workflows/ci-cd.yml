@@ -14,18 +14,24 @@ jobs:
         run: |
           echo "${{ secrets.TEST_SECRETS }}" >>.env
 
-      - name: Set up Docker Buildx
-        uses: docker/setup-buildx-action@v2
+#      - name: Set up Docker Buildx
+#        uses: docker/setup-buildx-action@v2
+#
+#      - name: Install Docker Compose
+#        run: |
+#          sudo apt-get update
+#          sudo apt-get install -y docker-compose
+#
+#      - name: Building Docker Containers
+#        run: |
+#          docker-compose up -d --build
+#
+#      - name: Running Tests
+#        run: |
+#          docker-compose exec -T api pytest
 
-      - name: Install Docker Compose
+      - name: Remove Docker and Cleanup
+        if: always()
         run: |
-          sudo apt-get update
-          sudo apt-get install -y docker-compose
-
-      - name: Building Docker Containers
-        run: |
-          docker-compose up -d --build
-
-      - name: Running Tests
-        run: |
-          docker-compose exec -T api pytest
+          sudo apt-get remove -y docker docker-engine docker.io containerd runc docker-compose
+          sudo apt-get autoremove -y

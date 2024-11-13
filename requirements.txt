@@ -9,3 +9,4 @@ django-cors-headers==4.5.0
 Pillow
 gunicorn==23.0.0
 python-dotenv==1.0.1
+pytest-xdist==3.6.1

@@ -19,6 +19,7 @@ services:
   api:
     container_name: postagram_api
     build: .
+    mem_limit: 512M
     restart: always
     env_file: .env
     ports:

@@ -1,3 +1,11 @@
+import os
+
+from dotenv import load_dotenv
+
+load_dotenv()
+
+ENV = os.environ.get("ENV")
+
 """
 Django settings for CoreRoot project.
 
@@ -19,12 +27,13 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 # See https://docs.djangoproject.com/en/4.1/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = "django-insecure-4qz8^4$yog60e7&6@7k9d!*(nt+lnc36rr@n0-9e%n8i@k%&-t"
+
+SECRET_KEY = os.environ.get("SECRET_KEY")
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
+DEBUG = False if ENV == "PROD" else True
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = os.environ.get("DJANGO_ALLOWED_HOSTS", default="*").split(",")
 
 # Application definition
 
@@ -98,14 +107,15 @@ WSGI_APPLICATION = "CoreRoot.wsgi.application"
 # Database
 # https://docs.djangoproject.com/en/4.1/ref/settings/#databases
 
+
 DATABASES = {
     "default": {
         "ENGINE": "django.db.backends.postgresql_psycopg2",
-        "NAME": 'coredb',
-        "USER": 'core',
-        "PASSWORD": 'w2Ch29&HE&T83',
-        "HOST": 'localhost',
-        "PORT": '5432',
+        "NAME": os.environ.get("DATABASE_NAME", "core_db"),
+        "USER": os.environ.get("DATABASE_USER", "core"),
+        "PASSWORD": os.environ.get("DATABASE_PASSWORD", "w2Ch29&HE&T83"),
+        "HOST": os.environ.get("DATABASE_HOST", "localhost"),
+        "PORT": os.environ.get("DATABASE_PORT", "5432"),
     }
 }
 
@@ -156,7 +166,6 @@ CORS_ALLOWED_ORIGINS = [
     "http://localhost:3000",
     "http://127.0.0.1:3000",
 ]
-
 
 MEDIA_URL = '/media/'
 MEDIA_ROOT = BASE_DIR / 'uploads'

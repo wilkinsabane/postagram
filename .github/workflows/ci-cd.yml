@@ -15,21 +15,25 @@ jobs:
         echo "${{ secrets.TEST_SECRETS }}" >> .env
 
     - name: Set up Docker Buildx
-      uses: docker/setup-buildx-action@v2
+      uses: docker/setup-buildx-action@v3
 
     - name: Install Docker Compose
       run: |
         sudo apt-get update
-        sudo apt-get install -y docker-compose
+        sudo apt-get install -y docker-compose-plugin
+
+    - name: Clean Up Old Containers
+      run: |
+        docker-compose down -v --remove-orphans
+        docker builder prune -f
 
     - name: Building Docker containers
       run: |
-        docker-compose up -d --build
+        docker-compose up -d --build --force-recreate --pull always
         docker-compose logs
 
     - name: Running Tests inside Docker containers
       run: |
-        docker-compose up -d --build --force-recreate
         docker-compose exec -T api pytest -n auto  # Parallel test execution
 
     - name: Notify on Failure

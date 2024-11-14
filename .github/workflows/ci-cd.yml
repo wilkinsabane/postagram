@@ -31,11 +31,27 @@ jobs:
       run: |
         docker-compose up -d --build
         docker-compose logs
+      env:
+        # Ensure containers use a limited amount of resources
+        COMPOSE_CONVERT_WINDOWS_PATHS: 1  # For compatibility if using Windows paths
+        COMPOSE_PARALLEL_LIMIT: 2         # Limit parallelism to avoid excessive resource use
 
     - name: Running Tests inside Docker containers
       run: |
         docker-compose up -d --build --force-recreate --pull always
-        docker-compose exec -T api pytest -n auto  # Parallel test execution
+        docker-compose exec -T api pytest -n 2  # Using 2 parallel workers for memory efficiency
+
+    # Set up CodeQL for code analysis
+    - name: Set up CodeQL
+      uses: github/codeql-action/init@v3
+      with:
+        languages: python
+
+    # Perform code analysis with CodeQL and limit RAM to prevent memory issues
+    - name: Analyze with CodeQL
+      run: |
+        codeql database analyze db-python --ram=2048 --format=sarif -o results.sarif
+
 
     - name: Notify on Failure
       if: failure()

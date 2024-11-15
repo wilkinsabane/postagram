@@ -8,14 +8,14 @@ jobs:
   build-test:
     runs-on: self-hosted
     steps:
-    - uses: ./actions/checkout
+    - uses: actions/checkout@v4
 
     - name: Injecting environment vars
       run: |
         echo "${{ secrets.TEST_SECRETS }}" >> .env
 
     - name: Set up Docker Buildx
-      uses: ./docker/setup-buildx-action
+      uses: ./actions/setup-buildx-action
 
     - name: Install Docker Compose
       run: |

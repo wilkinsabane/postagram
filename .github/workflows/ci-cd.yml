@@ -15,7 +15,7 @@ jobs:
         echo "${{ secrets.TEST_SECRETS }}" >> .env
 
     - name: Set up Docker Buildx
-      uses: actions/setup-buildx-action@v3
+      uses: ./actions/setup-buildx-action
 
     - name: Install Docker Compose
       run: |

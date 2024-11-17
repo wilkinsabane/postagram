@@ -6,12 +6,11 @@ on:
 
 jobs:
   build-test:
-    runs-on: ubuntu-latest  # Use GitHub-hosted runner
-
+    runs-on: ubuntu-latest  # Use GitHub-hosted runner for better compatibility
     steps:
       # Step 1: Checkout Code
       - name: Checkout Code
-        uses: actions/checkout  # Reference your local action for checkout
+        uses: actions/checkout@v4  # Fixed to use a GitHub action for `checkout`
 
       # Step 2: Inject Environment Variables
       - name: Set Environment Variables
@@ -19,7 +18,7 @@ jobs:
 
       # Step 3: Set up Docker Buildx
       - name: Set up Docker Buildx
-        uses: docker/docker-setup-buildx-action  # Reference your local action for Docker Buildx setup
+        uses: docker/docker-setup-buildx-action@v3  # Fixed to use the correct GitHub action
 
       # Step 4: Install Docker Compose
       - name: Install Docker Compose
@@ -42,31 +41,30 @@ jobs:
           docker-compose logs > docker_build_logs.txt
         env:
           DOCKER_BUILDKIT: 1  # Enable BuildKit for improved build performance
-
-      # Step 7: Upload Build Logs
+        # Save logs as an artifact for later inspection
       - name: Upload Build Logs
-        uses: actions/upload-artifact  # Reference your local action for uploading artifacts
+        uses: actions/upload-artifact@v4
         with:
           name: docker-build-logs
           path: docker_build_logs.txt
 
-      # Step 8: Run Tests
+      # Step 7: Run Tests
       - name: Run Tests in Docker
         run: |
           docker-compose exec -T api pytest -n auto core/auth/tests.py | tee test_output.log
         continue-on-error: true  # Ensure this step doesn't block failure notification
 
-      # Step 9: Upload Test Logs
+      # Step 8: Upload Test Logs
       - name: Upload Test Logs
-        uses: actions/upload-artifact  # Reference your local action for uploading artifacts
+        uses: actions/upload-artifact@v4
         with:
           name: test-logs
           path: test_output.log
 
-      # Step 10: Notify on Failure
+      # Step 9: Notify on Failure
       - name: Notify on Failure
         if: failure()
-        uses: actions/github-script  # Reference your local action for notification
+        uses: actions/github-script@v7
         with:
           github-token: ${{ secrets.GITHUB_TOKEN }}
           script: |

@@ -1,4 +1,4 @@
-name: Build, Test Postagram backend
+name: Build, Test and Deploy Postagram backend
 
 on:
   push:
@@ -6,42 +6,16 @@ on:
 
 jobs:
   build-test:
-    runs-on: self-hosted
+    runs-on: ubuntu-latest
     steps:
-    - uses: ./actions/checkout
-
+    - uses: actions/checkout@v4
     - name: Injecting environment vars
       run: |
         echo "${{ secrets.TEST_SECRETS }}" >> .env
-
-    - name: Set up Docker Buildx
-      uses: ./actions/setup-buildx-action
-
-    - name: Install Docker Compose
-      run: |
-        sudo apt-get update
-        sudo apt-get install -y docker-compose
-
-    - name: Clean Up Old Containers
-      run: |
-        docker-compose down -v --remove-orphans
-        docker builder prune -f
-
     - name: Building Docker containers
       run: |
         docker-compose up -d --build
         docker-compose logs
-
     - name: Running Tests inside Docker containers
       run: |
-        docker-compose up -d --build --force-recreate --pull always
-        docker-compose exec -T api pytest core/auth/tests.py
-
-    - name: Notify on Failure
-      if: failure()
-      uses: ./actions/github-script  # Update if a new version is released
-      with:
-        github-token: ${{ secrets.GITHUB_TOKEN }}
-        script: |
-          core.setOutput('summary', 'Build failed. Please check the logs.')
-          core.setOutput('log-link', `https://github.com/${{ github.repository }}/actions/runs/${{ github.run_id }}`)
+        docker-compose exec -T api pytest

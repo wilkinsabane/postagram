@@ -9,7 +9,7 @@ const userData = userFixtures();
 test("renders Login form", async () => {
     const user = userEvent.setup();
 
-    // Wrapping in `act` to ensure updates are handled properly
+    // Wrapping in `actions` to ensure updates are handled properly
     await act(async () => {
         render(<LoginForm />);
     });

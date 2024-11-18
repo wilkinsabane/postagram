@@ -32,7 +32,7 @@ axiosService.interceptors.response.use(
 const refreshAuthLogic = async (failedRequest) => {
     const refreshToken = getRefreshToken();  // Get the refresh token
     return axios.post("/refresh/token/", null, {
-        baseURL: "http://localhost:8000",
+        baseURL: process.env.REACT_APP_API_URL,
         headers: {
             Authorization: `Bearer ${refreshToken}`,
         },

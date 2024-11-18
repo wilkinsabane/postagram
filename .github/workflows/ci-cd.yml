@@ -56,14 +56,23 @@ jobs:
           docker-compose exec -T api pytest
         continue-on-error: true  # Ensure this step doesn't block failure notification
 
-      # Step 9: Upload Test Logs
-      - name: Upload Test Logs
-        uses: actions/upload-artifact@v4
+      # Step 9: Generate Test Summary
+      - name: Test Summary
+        uses: test-summary/action@v2
         with:
-          name: test-logs
-          path: test_output.log
+          paths: "test/results/**/TEST-*.xml"
+          output: test-summary.md
+        if: always()
 
-      # Step 10: Notify on Failure
+      # Step 10: Upload Test Summary
+      - name: Upload test summary
+        uses: actions/upload-artifact@v3
+        with:
+          name: test-summary
+          path: test-summary.md
+        if: always()
+
+      # Step 11: Notify on Failure
       - name: Notify on Failure
         if: failure()
         uses: actions/github-script@v7

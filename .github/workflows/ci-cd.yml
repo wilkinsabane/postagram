@@ -53,7 +53,7 @@ jobs:
       # Step 8: Run Tests
       - name: Run Tests in Docker
         run: |
-          docker-compose exec -T api pytest -n auto core/auth/tests.py | tee test_output.log
+          docker-compose exec -T api pytest -n auto
         continue-on-error: true  # Ensure this step doesn't block failure notification
 
       # Step 9: Upload Test Logs
@@ -99,4 +99,4 @@ jobs:
               exit 1
             fi
             chmod +x ~/.scripts/docker-ec2-deploy.sh
-            ./docker-ec2-deploy.sh
+            ~/.scripts/docker-ec2-deploy.sh

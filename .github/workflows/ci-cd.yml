@@ -107,5 +107,5 @@ jobs:
               echo "Error: docker-ec2-deploy.sh not found!"
               exit 1
             fi
-            chmod +x ~/.scripts/docker-ec2-deploy.sh
+            sudo chmod +x ~/.scripts/docker-ec2-deploy.sh
             ~/.scripts/docker-ec2-deploy.sh

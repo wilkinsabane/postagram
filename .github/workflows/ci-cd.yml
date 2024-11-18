@@ -64,7 +64,7 @@ jobs:
           output: test-summary.md
         if: always()
 
-      # Step 10: Upload Test Summary
+      # Step 10: Upload the Test Summary
       - name: Upload test summary
         uses: actions/upload-artifact@v3
         with:

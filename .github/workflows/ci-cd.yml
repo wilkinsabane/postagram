@@ -108,4 +108,5 @@ jobs:
               exit 1
             fi
             sudo chmod +x ~/.scripts/docker-ec2-deploy.sh
-            ~/.scripts/docker-ec2-deploy.sh
+            cd ~/.scripts
+            ./docker-ec2-deploy.sh
